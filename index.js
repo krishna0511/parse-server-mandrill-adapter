@@ -109,6 +109,7 @@ var MandrillAdapter = mandrillOptions => {
       if(mandrillOptions.passwordResetTemplate) {
         mandrill_client.messages.sendTemplate(
           {
+            template_name: mandrillOptions.passwordResetTemplate,
             message: message,
             async: true
           },
