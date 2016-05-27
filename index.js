@@ -105,14 +105,28 @@ var MandrillAdapter = mandrillOptions => {
     }
 
     return new Promise((resolve, reject) => {
+
+      if(mandrillOptions.passwordResetTemplate) {
+        mandrill_client.messages.sendTemplate(
+          {
+            message: message,
+            async: true
+          },
+          resolve,
+          reject
+        );
+      }
+      else {
         mandrill_client.messages.send(
-        {
-          message: message,
-          async: true
-        },
-        resolve,
-        reject
-      );
+          {
+            message: message,
+            async: true
+          },
+          resolve,
+          reject
+        );
+      }
+  
     });
   };
 
