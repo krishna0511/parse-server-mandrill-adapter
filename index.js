@@ -50,6 +50,7 @@ var MandrillAdapter = mandrillOptions => {
       }],
       global_merge_vars: [
         { name: 'appname', content: options.appName},
+        { name: 'username', content: options.user.get("username")},
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
       ]
@@ -89,6 +90,7 @@ var MandrillAdapter = mandrillOptions => {
       text: mandrillOptions.passwordResetBody,
       global_merge_vars: [
         { name: 'appname', content: options.appName},
+        { name: 'username', content: options.user.get("username")},
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
       ]
