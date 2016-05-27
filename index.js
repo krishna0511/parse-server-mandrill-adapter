@@ -9,30 +9,36 @@ var MandrillAdapter = mandrillOptions => {
     throw 'MandrillAdapter requires an API Key and a From Email Address.';
   }
 
+  // If a verification template slug is supplied, we'll send mail using that,
+  // otherwise use the supplied subject/body
+  if(!mandrillOptions.verificationTemplate) {
+      mandrillOptions.verificationSubject = mandrillOptions.verificationSubject ||
+        'Please verify your e-mail for *|appname|*';
+      mandrillOptions.verificationBody = mandrillOptions.verificationBody ||
+        'Hi,\n\nYou are being asked to confirm the e-mail address *|email|* ' +
+        'with *|appname|*\n\nClick here to confirm it:\n*|link|*';
+  }
+
+  // If a password reset template slug is supplied, we'll send mail using that,
+  // otherwise use the supplied subject/body
+  if(!mandrillOptions.passwordResetTemplate) {
+      mandrillOptions.passwordResetSubject = mandrillOptions.passwordResetSubject ||
+        'Password Reset Request for *|appname|*';
+      mandrillOptions.passwordResetBody = mandrillOptions.passwordResetBody ||
+        'Hi,\n\nYou requested a password reset for *|appname|*.\n\nClick here ' +
+        'to reset it:\n*|link|*';
+  }
+
   mandrillOptions.replyTo =
       mandrillOptions.replyTo ||
       mandrillOptions.fromEmail;
   mandrillOptions.displayName =
       mandrillOptions.displayName ||
       mandrillOptions.replyTo;
-  mandrillOptions.verificationSubject =
-      mandrillOptions.verificationSubject ||
-      'Please verify your e-mail for *|appname|*';
-  mandrillOptions.verificationBody =
-      mandrillOptions.verificationBody ||
-      'Hi,\n\nYou are being asked to confirm the e-mail address *|email|* ' +
-      'with *|appname|*\n\nClick here to confirm it:\n*|link|*';
-  mandrillOptions.passwordResetSubject =
-      mandrillOptions.passwordResetSubject ||
-      'Password Reset Request for *|appname|*';
-  mandrillOptions.passwordResetBody =
-      mandrillOptions.passwordResetBody ||
-      'Hi,\n\nYou requested a password reset for *|appname|*.\n\nClick here ' +
-      'to reset it:\n*|link|*';
 
   var mandrill_client = new mandrill.Mandrill(mandrillOptions.apiKey);
 
-  var sendVerificationEmail = options => {
+  var sendVerificationEmail = options =>{
     var message = {
       from_email: mandrillOptions.fromEmail,
       from_name: mandrillOptions.displayName,
@@ -42,13 +48,19 @@ var MandrillAdapter = mandrillOptions => {
       to: [{
         email: options.user.get("email")
       }],
-      subject: mandrillOptions.verificationSubject,
-      text: mandrillOptions.verificationBody,
       global_merge_vars: [
         { name: 'appname', content: options.appName},
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
       ]
+    };
+
+    if (mandrillOptions.verificationTemplate) {
+      message.template_name = mandrillOptions.verificationTemplate;
+    }
+    else {
+      message.subject = mandrillOptions.verificationSubject;
+      message.text = mandrillOptions.verificationBody;
     }
 
     return new Promise((resolve, reject) => {
@@ -59,9 +71,9 @@ var MandrillAdapter = mandrillOptions => {
           },
           resolve,
           reject
-        )
+        );
     });
-  }
+  };
 
   var sendPasswordResetEmail = options => {
     var message = {
@@ -80,6 +92,14 @@ var MandrillAdapter = mandrillOptions => {
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
       ]
+    };
+
+    if (mandrillOptions.passwordResetTemplate) {
+      message.template_name = mandrillOptions.passwordResetTemplate;
+    }
+    else {
+      message.subject = mandrillOptions.passwordResetSubject;
+      message.text = mandrillOptions.passwordResetBody;
     }
 
     return new Promise((resolve, reject) => {
@@ -90,9 +110,9 @@ var MandrillAdapter = mandrillOptions => {
         },
         resolve,
         reject
-      )
+      );
     });
-  }
+  };
 
   var sendMail = options => {
     var message = {
@@ -106,7 +126,7 @@ var MandrillAdapter = mandrillOptions => {
       }],
       subject: options.subject,
       text: options.text
-    }
+    };
 
     return new Promise((resolve, reject) => {
       mandrill_client.messages.send(
@@ -116,15 +136,15 @@ var MandrillAdapter = mandrillOptions => {
         },
         resolve,
         reject
-      )
+      );
   });
-}
+};
 
   return Object.freeze({
     sendVerificationEmail: sendVerificationEmail,
     sendPasswordResetEmail: sendPasswordResetEmail,
     sendMail: sendMail
   });
-}
+};
 
 module.exports = MandrillAdapter;
