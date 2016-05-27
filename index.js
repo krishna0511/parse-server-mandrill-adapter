@@ -56,15 +56,24 @@ var MandrillAdapter = mandrillOptions => {
       ]
     };
 
-    if (mandrillOptions.verificationTemplate) {
-      message.template_name = mandrillOptions.verificationTemplate;
-    }
-    else {
+    if (!mandrillOptions.verificationTemplate) {
       message.subject = mandrillOptions.verificationSubject;
       message.text = mandrillOptions.verificationBody;
     }
 
     return new Promise((resolve, reject) => {
+      if(mandrillOptions.verificationTemplate) {
+        mandrill_client.messages.sendTemplate(
+          {
+            template_name: mandrillOptions.verificationTemplate,
+            message: message,
+            async: true
+          },
+          resolve,
+          reject
+        );
+      }
+      else {
         mandrill_client.messages.send(
           {
             message: message,
@@ -73,6 +82,7 @@ var MandrillAdapter = mandrillOptions => {
           resolve,
           reject
         );
+      }
     });
   };
 
@@ -96,10 +106,7 @@ var MandrillAdapter = mandrillOptions => {
       ]
     };
 
-    if (mandrillOptions.passwordResetTemplate) {
-      message.template_name = mandrillOptions.passwordResetTemplate;
-    }
-    else {
+    if (!mandrillOptions.passwordResetTemplate) {
       message.subject = mandrillOptions.passwordResetSubject;
       message.text = mandrillOptions.passwordResetBody;
     }
