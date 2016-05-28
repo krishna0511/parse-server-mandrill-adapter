@@ -38,7 +38,7 @@ var MandrillAdapter = mandrillOptions => {
 
   var mandrill_client = new mandrill.Mandrill(mandrillOptions.apiKey);
 
-  var sendVerificationEmail = options =>{
+  var sendVerificationEmail = options => {
     var message = {
       from_email: mandrillOptions.fromEmail,
       from_name: mandrillOptions.displayName,
@@ -55,6 +55,8 @@ var MandrillAdapter = mandrillOptions => {
         { name: 'link', content: options.link}
       ]
     };
+
+    console.log(options.link);
 
     if (!mandrillOptions.verificationTemplate) {
       message.subject = mandrillOptions.verificationSubject;
