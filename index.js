@@ -9,6 +9,26 @@ var MandrillAdapter = mandrillOptions => {
     throw 'MandrillAdapter requires an API Key and a From Email Address.';
   }
 
+  // If the user supplies a list of merge variables for verification template usage, 
+  // use those otherwise set the defaults needed for our default template.
+  if(!mandrillOptions.verificationMergeVars) {
+    mandrillOptions.verificationMergeVars = [
+      { name: 'appname', content: options.appName},
+      { name: 'email', content: options.user.get("email")},
+      { name: 'link', content: options.link}
+    ];
+  }
+
+  // If the user supplies a list of merge variables for verification template usage, 
+  // use those otherwise set the defaults needed for our default template.
+  if(!mandrillOptions.passwordResetMergeVars) {
+    mandrillOptions.passwordResetMergeVars = [
+      { name: 'appname', content: options.appName},
+      { name: 'email', content: options.user.get("email")},
+      { name: 'link', content: options.link}
+    ];
+  }
+
   // If a verification template slug is supplied, we'll send mail using that,
   // otherwise use the supplied subject/body
   if(!mandrillOptions.verificationTemplate) {
@@ -48,12 +68,7 @@ var MandrillAdapter = mandrillOptions => {
       to: [{
         email: options.user.get("email")
       }],
-      global_merge_vars: [
-        { name: 'appname', content: options.appName},
-        { name: 'firstname', content: options.user.get("first_name")},
-        { name: 'email', content: options.user.get("email")},
-        { name: 'link', content: options.link}
-      ]
+      global_merge_vars: mandrillOptions.verificationMergeVars
     };
 
     console.log(options.link);
@@ -99,12 +114,7 @@ var MandrillAdapter = mandrillOptions => {
       to: [{
         email: options.user.get("email")
       }],
-      global_merge_vars: [
-        { name: 'appname', content: options.appName},
-        { name: 'firstname', content: options.user.get("first_name")},
-        { name: 'email', content: options.user.get("email")},
-        { name: 'link', content: options.link}
-      ]
+      global_merge_vars: mandrillOptions.verificationMergeVars
     };
 
     if (!mandrillOptions.passwordResetTemplate) {
