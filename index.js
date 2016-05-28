@@ -49,7 +49,6 @@ var MandrillAdapter = mandrillOptions => {
         email: options.user.get("email")
       }],
       global_merge_vars: [
-        { name: 'appname', content: options.appName},
         { name: 'username', content: options.user.get("username")},
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
@@ -66,6 +65,7 @@ var MandrillAdapter = mandrillOptions => {
         mandrill_client.messages.sendTemplate(
           {
             template_name: mandrillOptions.verificationTemplate,
+            template_content: [],
             message: message,
             async: true
           },
@@ -97,7 +97,6 @@ var MandrillAdapter = mandrillOptions => {
         email: options.user.get("email")
       }],
       global_merge_vars: [
-        { name: 'appname', content: options.appName},
         { name: 'username', content: options.user.get("username")},
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
@@ -115,6 +114,7 @@ var MandrillAdapter = mandrillOptions => {
         mandrill_client.messages.sendTemplate(
           {
             template_name: mandrillOptions.passwordResetTemplate,
+            template_content: [],
             message: message,
             async: true
           },
