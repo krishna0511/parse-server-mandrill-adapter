@@ -49,7 +49,8 @@ var MandrillAdapter = mandrillOptions => {
         email: options.user.get("email")
       }],
       global_merge_vars: [
-        { name: 'username', content: options.user.get("username")},
+        { name: 'appname', content: options.appName},
+        { name: 'firstname', content: options.user.get("first_name")},
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
       ]
@@ -97,7 +98,8 @@ var MandrillAdapter = mandrillOptions => {
         email: options.user.get("email")
       }],
       global_merge_vars: [
-        { name: 'username', content: options.user.get("username")},
+        { name: 'appname', content: options.appName},
+        { name: 'firstname', content: options.user.get("first_name")},
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
       ]
