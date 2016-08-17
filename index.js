@@ -50,7 +50,7 @@ var MandrillAdapter = mandrillOptions => {
       }],
       global_merge_vars: [
         { name: 'appname', content: options.appName},
-        { name: 'firstname', content: options.user.get("first_name")},
+        { name: 'name', content: options.user.get("name")},
         { name: 'email', content: options.user.get("email")},
         { name: 'link', content: options.link}
       ]
